@@ -8,5 +8,10 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "date-format": "^3.0.0",
+    "dateformat": "^5.0.2",
+    "fs": "0.0.1-security"
+  }
 }
