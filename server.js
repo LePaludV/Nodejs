@@ -1,139 +1,37 @@
-const catalogue = [
-	{
-		lib: 'Kit Raspberry Pi 400',
-		image: 'kits-raspberry-pi-400.jpg',
-		prix: 109.95
-	},
-	{
-		lib: 'Rapsberry Pi 4 modèle B 8gb',
-		image: 'raspberry-pi-4-modele-b-8gb.png',
-		prix: 83.95
-	},
-	{
-		lib: 'Raspberry Pi 4 module compute',
-		image: 'raspberry-pi-compute-module-4.png',
-		prix: 27.00
-	},
-	{
-		lib: 'Raspberry Pi 4 intégré clavier FR', 
-		image: 'raspberry-pi-400.png', 
-		prix: 76.80
-	},
-	{
-		lib: 'Boitier officiel Raspberry Pi 4', 
-		image: 'boitier-officiel-pour-raspberry-pi-4-kubii.jpg', 
-		prix: 5.95
-	},
-	{
-		lib: 'Rapsberry Pi 4 modèle B 4gb', 
-		image: 'nouveau-raspberry-pi-4-modele-b-4gb-kubii.png', 
-		prix: 61.00
-	},
-	{
-		lib: 'Prasberry Pi 4 compute board', 
-		image: 'compute-module-4-io-board.png', 
-		prix: 37.80
-	},
-	{
-		lib: 'Adaptateur officiel micro-hdmi vers hdmi', 
-		image: 'adaptateur-officiel-micro-hdmi-vers-hdmi.png', 
-		prix: 3.84
-	},
-	{
-		lib: 'Rapsberry Pi 4 modèle B 2gb', 
-		image: 'nouveau-raspberry-pi-4-modele-b-2gb.jpg', 
-		prix: 49.50
-	},
-	{
-		lib: 'Souris filaire officielle Raspberry Pi 4', 
-		image: 'souris-filaire-officielle-raspberry-pi-kubii.jpg', 
-		prix: 8.50
-	},
-	{
-		lib: 'Module camera Raspberry', 
-		image: 'module-camera-v2-8mp-kubii.jpg', 
-		prix: 27.90
-	},
-	{
-		lib: 'Carte SD officielle 32g Noobs préinstallé', 
-		image: 'carte-officielle-micro-sd-noobs-32gb-classe-a1-panasonic.png', 
-		prix: 12.90
-	},
-	{
-		lib: 'Cable officiel blanc micro-hdmi vers hdmi', 
-		image: 'cable-officiel-blanc-micro-hdmi-vers-hdmi-type-a-1m.jpg', 
-		prix: 5.90
-	},
-	{
-		lib: 'Raspberry Pi 4 sense hat', 
-		image: 'raspberry-pi-sense-hat-kubii.jpg', 
-		prix: 36.00
-	},
-	{
-		lib: 'Alimentation officielle usb type-c Raspberry Pi', 
-		image: 'alimentation-officielle-usb-type-c-raspberry-pi.jpg', 
-		prix:8.95
-	},
-	{
-		lib: 'Clavier officiel Raspberry Pi azerty', 
-		image: 'clavier-officiel-raspberry-pi-azerty-kubii.jpg', 
-		prix:17.95
-	}
-];
-const panier =[]
-const express = require('express')
+const express = require('express');
+const { emit } = require('process');
 const app = express();
 const http = require('http').createServer(app);
-app.set('view engine', 'pug');
-app.set('views', 'views/');
-app.get('/',function(req, res){
- 
- 
+const io = require('socket.io')(http);
+var colors = ['aqua', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'yellow' ];
+
+var canvas = new Array(25);
+for (var i=0; i<canvas.length; i++) {
+    canvas[i] = new Array(25);
+    for (var j=0; j<canvas[i].length; j++) {
+        canvas[i][j] = 'white';
+    }
+}
+
+
+
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/static/client.html');
+    });
+    app.use('/static', express.static('static'));
+    http.listen(3000, () => {
+    console.log('listening on *:3000');
     
-    res.render("index", {catalogue:catalogue});
-    
-})
+    });
 
+    io.on('connection', (socket) => {
+        console.log("Nouveau client connecté: " + socket.id);
+        io.to(socket.id).emit('player_has_joined',{n:colors[Math.floor(Math.random() * colors.length)],c:canvas});
+        socket.on('player_plays',(c)=>{
+            canvas=c
+            io.emit('maj',canvas)
+        })
 
-app.get('/addToCart',function(req, res){
- 
-	var id = req.query.id;
-    
-    console.log(id);
-	var nom =catalogue[id].lib;
+    })
 
-
-	find=true
-	
-	for(var i in panier){
-		if (panier[i].nom==nom){
-			//console.log('trouvé');
-			find=false
-			panier[i].qte+=1
-
-		}
-	}
-	
-    if(find){
-		panier.push({nom: nom, qte:1,prix: catalogue[id].prix})
-	}
-	//console.log(panier);
-	var total=0
-
-	panier.forEach(e => {
-
-		total+=e.prix*e.qte
-	});;
-
-	//console.log(total);
-	res.render("panier", {panier:panier,total:total});
-
-})
-
-
-
-app.use('/images', express.static('images'));
-app.use('/views', express.static('views'));
-http.listen(3000, () => {
-console.log('listening on *:3000');
-});
