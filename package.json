@@ -1,17 +1,14 @@
 {
-  "name": "tp6",
+  "name": "tp2ex1",
   "version": "1.0.0",
-  "description": "exo1tp6",
-  "main": "program.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "start": "node program.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "vlepalud",
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "figlet": "^1.5.2",
-    "fs": "0.0.1-security",
-    "table": "^6.7.3"
+    "express": "^4.17.1"
   }
 }
