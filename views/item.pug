@@ -1,0 +1,43 @@
+doctype html
+html(lang=fr)
+  head
+    title #{nom}
+    meta(charset="UTF-8")
+    link(rel="stylesheet", href="http://semantic-ui.com/dist/semantic.min.css")
+    script(src="https://code.jquery.com/jquery-3.6.0.js") 
+    script(src="http://semantic-ui.com/dist/semantic.min.js") 
+ 
+    script(src="/views/script.js") 
+    body.ui.container
+     
+        div.ui.items
+         div.item
+          div.images
+           img(src=data.imageLink)
+          div.content
+           div.ui
+            a.ui.label(href="/")
+             i(class="arrow up icon ") Back          
+           div.ui
+            a.prev.ui.label
+             i(class="arrow left icon ") 
+             p Previous
+        
+            a.next.ui.label
+             i(class="arrow right icon ") 
+             p Next
+
+           div.header
+            p.header #{data.title}
+            p.header #{data.author}
+           div.description
+            p #{data.country} , #{data.year}
+            p #{data.pages} pages
+            p Note :
+             div(class="ui heart rating" data-rating=data.note data-max-rating="5")
+           
+           div.extra
+            a(href=data.link) 
+             i.external.alternate.icon
+             p Read on wikipedia
+            

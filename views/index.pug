@@ -1,0 +1,20 @@
+doctype html
+html(lang=fr)
+  head
+    title #{nom}
+    meta(charset="UTF-8")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
+    script(src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous") 
+    script(src="/views/script.js") 
+    -var val=0;
+    body.ui.container
+     div.ui.celled.list
+      
+      each book in data 
+       div.item
+      
+        img(class="ui avatar image" src=book.imageLink)
+        div.content
+         a(class="header" href="/item?rank="+val) #{book.title}
+         div.description #{book.author} (#{book.year})
+         p(style="display: none")=val++
